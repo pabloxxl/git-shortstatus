@@ -15,6 +15,13 @@ class code:
 
 
 class shortStatus(object):
+    class statusItem(object):
+        def __init__(self, txt, type):
+            self.txt = txt
+            self.type = type
+
+    def __init__(self):
+        self.statusList = []
 
     def parse(self):
         # Parse program arguments
@@ -46,8 +53,25 @@ class shortStatus(object):
         if err:
             return code.GIT_STATUS_ERROR
 
-        self.statusList = out.rstrip().split("\n")
+        status = out.rstrip().split("\n")
+        for item in status:
+            type, name = item.split()
+            self.statusList.append(self.statusItem(name, type))
+
+        # TODO Add sorting to directories
         return code.OK
+
+    def getModified(self):
+        return [a.txt for a in self.statusList if a.type == "M"]
+
+    def getDeleted(self):
+        return [a.txt for a in self.statusList if a.type == "D"]
+
+    def getNew(self):
+        return [a.txt for a in self.statusList if a.type == "N"]
+
+    def getAll(self):
+        return [a.txt for a in self.statusList]
 
 if __name__ == "__main__":
     s = shortStatus()
@@ -55,4 +79,18 @@ if __name__ == "__main__":
     if returnCode:
         print "Git shortstatus returned code " + str(returnCode)
         sys.exit(returnCode)
+    lMod = s.getModified()
+    lDel = s.getDeleted()
+    lNew = s.getNew()
+
+    lModLen = len(lMod)
+    lDelLen = len(lDel)
+    lNewLen = len(lNew)
+
+    llen = lModLen + lDelLen + lNewLen
+    print "Modified: " + str(lModLen)
+    print "Deleted:  " + str(lDelLen)
+    print "New:      " + str(lNewLen)
+    print "------------"
+    print "All:      " + str(llen)
     sys.exit(0)
