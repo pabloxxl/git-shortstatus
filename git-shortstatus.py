@@ -70,6 +70,9 @@ class shortStatus(object):
     def getNew(self):
         return [a.txt for a in self.statusList if a.type == "N"]
 
+    def getUntracked(self):
+        return [a.txt for a in self.statusList if a.type == "??"]
+
     def getAll(self):
         return [a.txt for a in self.statusList]
 
@@ -82,15 +85,18 @@ if __name__ == "__main__":
     lMod = s.getModified()
     lDel = s.getDeleted()
     lNew = s.getNew()
+    lUntracked = s.getUntracked()
 
     lModLen = len(lMod)
     lDelLen = len(lDel)
     lNewLen = len(lNew)
+    lUntrackedLen = len(lUntracked)
 
-    llen = lModLen + lDelLen + lNewLen
-    print "Modified: " + str(lModLen)
-    print "Deleted:  " + str(lDelLen)
-    print "New:      " + str(lNewLen)
+    llen = lModLen + lDelLen + lNewLen + lUntrackedLen
+    print "Modified:  " + str(lModLen)
+    print "Deleted:   " + str(lDelLen)
+    print "New:       " + str(lNewLen)
+    print "Untracked: " + str(lUntrackedLen)
     print "------------"
     print "All:      " + str(llen)
     sys.exit(0)
